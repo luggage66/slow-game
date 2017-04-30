@@ -80,7 +80,8 @@ var config = {
     },
     devServer: {
         historyApiFallback: true
-    }
+    },
+    devtool: '#cheap-module-eval-source-map'
 };
 
 if (NODE_ENV === 'production') {
