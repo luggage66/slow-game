@@ -21,7 +21,7 @@ var config = {
         path: path.join(__dirname, 'static'),
         filename: "assets/entry.[name].[hash].js",
         chunkFilename: "assets/dependency.[id].[chunkhash].js",
-        publicPath: '/',
+        publicPath: '/slow-game/',
     },
     module: {
         rules: [
