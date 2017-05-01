@@ -45,37 +45,22 @@ function getBrightness(r, g, b) {
         b * b * .068);
 }
 
-
 @inject("gameState")
 @observer
 export default class ViewPort extends React.Component<{ gameState?: GameState }, never> {
 
     cellRenderer = (props: GridCellProps) => {
-        const index = getIndexForCoords(
-            this.props.gameState.mapData.imageData.width,
-            this.props.gameState.mapData.imageData.height,
-            props.columnIndex,
-            props.rowIndex
-        );
+        const tile = this.props.gameState.mapData.tiles[props.rowIndex][props.columnIndex];
 
-        const rawData = this.props.gameState.mapData.imageData.data;
-
-        const r = rawData[index];
-        const g = rawData[index + 1];
-        const b = rawData[index + 2];
-        const a = rawData[index + 3];
-
-        const tileName = determineTile(r, g, b);
-        const tileUrl = tiles[tileName];
+        const tileUrl = tiles[tile.ground];
 
         const localStyle = {
             backgroundImage: `url(${tileUrl})`,
         };
 
-        // console.log(index, r, g, b, a);
-        // props.columnIndex * 4 *  props.rowIndex * 4
+        const update = () => tile.ground = 'grass';
 
-        return <div style={{...props.style, ...localStyle }} className={styles.tile} key={`${props.rowIndex}-${props.columnIndex}`}>
+        return <div style={{...props.style, ...localStyle }} onClick={update} className={styles.tile} key={`${props.rowIndex}-${props.columnIndex}`}>
         </div>;
     }
 
