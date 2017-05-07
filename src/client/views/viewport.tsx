@@ -5,6 +5,7 @@ import GameState from '../gameState'; // for type only
 import { AutoSizer, Grid, GridCellRenderer, GridCellProps } from 'react-virtualized';
 
 import MapChunk from './mapChunk';
+import EntityLayer from './entityLayer';
 
 import styles from '../styles/index.scss';
 
@@ -47,17 +48,20 @@ export default class ViewPort extends React.Component<{ gameState?: GameState },
         return <div className={styles.viewport}>
             <AutoSizer>
                 {({width, height}) => {
-                    return <Grid
-                        cellRenderer={this.cellRenderer}
-                        columnWidth={MapChunk.width}
-                        columnCount={16}
-                        height={height}
-                        overscanColumnCount={1}
-                        overscanRowCount={1}
-                        rowHeight={MapChunk.height}
-                        rowCount={16}
-                        width={width}
-                    />;
+                    return [
+                        <Grid
+                            cellRenderer={this.cellRenderer}
+                            columnWidth={MapChunk.width}
+                            columnCount={16}
+                            height={height}
+                            overscanColumnCount={1}
+                            overscanRowCount={1}
+                            rowHeight={MapChunk.height}
+                            rowCount={16}
+                            width={width}
+                        />,
+                        <EntityLayer />
+                    ];
                 }}
             </AutoSizer>
         </div>;

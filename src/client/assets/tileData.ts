@@ -44,25 +44,29 @@ export interface TileDictionary {
 
 export async function loadTileImages(): Promise<TileDictionary> {
 
-    const imageInfos = await Promise.all(imageLoadData.map(tileLoadData => {
+    const imageInfos = await Promise.all(imageLoadData.map(async tileLoadData => {
 
-        const imageUrl = require(`./tiles/${tileLoadData.pngName}.png`);
-        const image = new Image();
+        const image = await loadTileImage(tileLoadData.pngName);
 
-        return new Promise<TileInfo>((resolve, reject) => {
-            // const tileImageUrl = require;
-
-            image.onload = () => {
-                resolve({
-                    key: tileLoadData.key,
-                    image,
-                    color: tileLoadData.color
-                });
-            };
-
-            image.src = imageUrl;
-        });
+        return {
+            key: tileLoadData.key,
+            image,
+            color: tileLoadData.color
+        };
     }));
 
     return imageInfos.reduce((prev, next) => { prev[next.key] = next; return prev; }, {});
+}
+
+export function loadTileImage(pngName: string): Promise<HTMLImageElement> {
+    const imageUrl = require(`./tiles/${pngName}.png`);
+    const image = new Image();
+
+    return new Promise<HTMLImageElement>((resolve, reject) => {
+        image.onload = () => {
+            resolve(image);
+        };
+
+        image.src = imageUrl;
+    });
 }

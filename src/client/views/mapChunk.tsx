@@ -7,7 +7,10 @@ import { MapStore } from '../stores/map'; // for type
 
 import styles from '../styles/index.scss';
 
-const tileSize = { width: 50, height: 40 };
+const tileSize = {
+    width: 50,
+    height: 40
+};
 
 const horizontalTiles = 16;
 const verticalTiles = 16;
@@ -63,13 +66,15 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
         const map = this.props.map;
         const ctx = this.canvasContext;
 
+        ctx.setTransform(1, 0, 0, 1, 0.5, 0.5);
+
         ctx.fillStyle = "white";
         // ctx.fillRect(0, 0, 10, 10); // this.canvas.width, this.canvas.height);
 
         for (let x = 0; x < horizontalTiles; x++) {
             for (let y = 0; y < verticalTiles; y++) {
-                const xPosition = x * tileSize.width + 0.5;
-                const yPosition = y * tileSize.height + 0.5;
+                const xPosition = x * tileSize.width;
+                const yPosition = y * tileSize.height;
 
                 const mapX = x + this.props.x * horizontalTiles;
                 const mapY = y + this.props.y * verticalTiles;
@@ -78,13 +83,13 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
 
                 // const tileImage = this.props.gameState.tiles[(x + y) % 23 ? 'grass' : 'wall/tall'].image;
 
-                ctx.drawImage(tileImage, xPosition, yPosition, 50.5, 85.5);
+                ctx.drawImage(tileImage, xPosition, yPosition, 50, 85);
             }
         }
 
         if (highlightChunks) {
             ctx.save();
-            ctx.translate(0, topPadding);
+            ctx.setTransform(1, 0, 0, 1, 0.5, topPadding + 0.5);
 
             ctx.rect(0, 0, MapChunk.width, MapChunk.height);
             ctx.clip();
@@ -96,10 +101,10 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
 
             ctx.font = '16px sans-serif';
             ctx.fillStyle = 'white';
-            ctx.fillText(`Chunk - ${this.props.x}-${this.props.y}`, 10.5, 25.5);
+            ctx.fillText(`Chunk ${this.props.y}, ${this.props.x}`, 10, 25);
 
             ctx.font = '14px sans-serif';
-            ctx.fillText(`${this.renderCount} renders.`, 10.5, 44.5);
+            ctx.fillText(`${this.renderCount} renders.`, 10, 44);
 
             ctx.shadowColor = "purple";
             ctx.shadowOffsetX = 0;
@@ -108,7 +113,7 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
             ctx.strokeStyle = "purple";
             ctx.lineWidth = 2;
 
-            ctx.strokeRect(0.5, 0.5, MapChunk.width - 0.5, MapChunk.height - 0.5);
+            ctx.strokeRect(0, 0, MapChunk.width, MapChunk.height);
 
             ctx.restore();
         }

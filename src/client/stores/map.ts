@@ -14,6 +14,7 @@ const MAP_HEIGHT = CHUNK_HEIGHT * TILES_PER_CHUNK_VERTICAL;
 export class MapStore {
     @observable ground: TileInfo[][];
     assets: AssetsStore;
+    @observable playerPosition: { x: 4, y: 4 };
 
     constructor(assets: AssetsStore) {
         this.assets = assets;
