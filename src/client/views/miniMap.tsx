@@ -58,6 +58,7 @@ export default class MiniMapView extends React.Component<MiniMapViewProps, never
             }
         }
 
+        ctx.fillStyle = "white";
         ctx.fillText(`Minimap: ${this.renderCount} renders`, 10, 10);
     }
 

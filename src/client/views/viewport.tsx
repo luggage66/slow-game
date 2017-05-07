@@ -59,8 +59,7 @@ export default class ViewPort extends React.Component<{ gameState?: GameState },
                             rowHeight={MapChunk.height}
                             rowCount={16}
                             width={width}
-                        />,
-                        <EntityLayer />
+                        />
                     ];
                 }}
             </AutoSizer>

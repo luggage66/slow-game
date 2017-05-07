@@ -87,7 +87,7 @@ export default class Entity extends React.Component<EntityProps, never> {
             ctx.strokeStyle = "purple";
             ctx.lineWidth = 2;
 
-            ctx.strokeRect(0, 0, Entity.width, Entity.height);
+            ctx.strokeRect(0, 0, Entity.width - 1, Entity.height - 1);
 
             ctx.restore();
         }

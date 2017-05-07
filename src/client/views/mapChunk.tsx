@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { autorun } from 'mobx';
+import { autorun, action, computed } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import GameState from '../gameState'; // for type only
 import { RenderOptions } from '../stores/renderOptions'; // for type
@@ -27,7 +27,6 @@ interface MapChunkProperties {
 }
 
 @inject("gameState", "renderOptions", "map")
-@observer
 export default class MapChunk extends React.Component<MapChunkProperties, never> {
 
     static width = tileSize.width * horizontalTiles;
@@ -41,21 +40,29 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
 
     initializeCanvas = (canvasElement: HTMLCanvasElement) => {
         if (canvasElement) {
+            this.canvas = canvasElement;
             this.canvasContext = canvasElement.getContext('2d');
 
             this.renderReactionDisposer = autorun(`Render chunk: ${this.props.x}-${this.props.y}`, () => this.renderToCanvas());
         }
         else {
-            if (this.renderReactionDisposer) {
-                this.renderReactionDisposer();
-            }
+            this.dispose();
         }
     }
 
     componentWillUnmount() {
+        this.dispose();
+    }
+
+    dispose() {
         if (this.renderReactionDisposer) {
             this.renderReactionDisposer();
+            this.renderReactionDisposer = null;
         }
+
+        this.canvas = null;
+        this.canvasContext = null;
+        this.renderReactionDisposer = null;
     }
 
     renderToCanvas() {
@@ -68,8 +75,7 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
 
         ctx.setTransform(1, 0, 0, 1, 0.5, 0.5);
 
-        ctx.fillStyle = "white";
-        // ctx.fillRect(0, 0, 10, 10); // this.canvas.width, this.canvas.height);
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height + topPadding); // this.canvas.width, this.canvas.height);
 
         for (let x = 0; x < horizontalTiles; x++) {
             for (let y = 0; y < verticalTiles; y++) {
@@ -111,9 +117,9 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
             ctx.shadowOffsetY = 0;
             ctx.shadowBlur = 4;
             ctx.strokeStyle = "purple";
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1;
 
-            ctx.strokeRect(0, 0, MapChunk.width, MapChunk.height);
+            ctx.strokeRect(0, 0, MapChunk.width - 1, MapChunk.height - 1);
 
             ctx.restore();
         }

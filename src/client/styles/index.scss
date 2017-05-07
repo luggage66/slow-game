@@ -74,3 +74,7 @@ $ui-color: $primary-color-text;
     width: 12800px;
     height: 10240px;
 }
+
+canvas {
+    image-rendering: pixelated;
+}
