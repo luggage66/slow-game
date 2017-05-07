@@ -1,32 +1,45 @@
 import * as React from 'react';
 import { observable, action, runInAction, computed } from 'mobx';
+import { MapStore } from './stores/map';
+import { AssetsStore } from './stores/assets';
+import { RenderOptions } from './stores/renderOptions';
 
 import mapUrl from './map.png';
-import { loadMapFromUrl, MapData } from './mapData';
-import { TileDictionary, loadTileImages } from './tileData';
 
 export default class GameState {
     @observable isReady = false;
-    @observable mapData: MapData;
     @observable mapUrl = mapUrl;
-    tiles: TileDictionary;
+
+    stores: {
+        gameState: GameState;
+        map: MapStore;
+        renderOptions: RenderOptions;
+        assets: AssetsStore;
+    };
 
     constructor() {
+        const assets = new AssetsStore();
+        const map = new MapStore(assets);
+
+        const renderOptions = new RenderOptions();
+        this.stores = {
+            gameState: this,
+            map,
+            renderOptions,
+            assets
+        };
+
         this.loadAssets();
     }
 
     @action
     async loadAssets() {
-        const mapData = await loadMapFromUrl(this.mapUrl);
-        const tiles = await loadTileImages();
+        await this.stores.assets.load();
+        this.stores.map.generate('33223323');
 
         runInAction(() => {
-            console.log(mapData.imageData);
-            this.tiles = tiles;
-            this.mapData = mapData;
             this.isReady = true;
         });
-
     }
 
 }

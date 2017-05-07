@@ -6,7 +6,6 @@ import GameState from './gameState';
 import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
 import styles from './styles/index.scss';
-import { RenderOptions } from './stores/renderOptions';
 
 if (process.env.NODE_ENV === 'development') {
     // useStrict(true);
@@ -20,5 +19,18 @@ document.body.appendChild(reactContainer);
 
 // mounty mounty
 const gameState = (window as any).game = new GameState();
-const renderOptions = (window as any).renderOptions = new RenderOptions();
-ReactDom.render(<Provider gameState={gameState} renderOptions={renderOptions}><GameView /></Provider>, reactContainer);
+// ReactDom.render(<Provider gameState={gameState} renderOptions={renderOptions}><GameView /></Provider>, reactContainer);
+
+// tslint:disable-next-line:variable-name
+function render(Component) {
+    ReactDom.render(<Provider {...gameState.stores}><Component /></Provider>, reactContainer);
+}
+
+render(GameView);
+
+if (module.hot) {
+    module.hot.accept('./views/game', () => {
+        console.log('hot reloading ./views/game');
+        render(GameView);
+    });
+}

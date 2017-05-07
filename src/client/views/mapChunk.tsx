@@ -3,6 +3,7 @@ import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
 import GameState from '../gameState'; // for type only
 import { RenderOptions } from '../stores/renderOptions'; // for type
+import { MapStore } from '../stores/map'; // for type
 
 import styles from '../styles/index.scss';
 
@@ -16,12 +17,13 @@ const topPadding = 25;
 interface MapChunkProperties {
     gameState?: GameState;
     renderOptions?: RenderOptions;
+    map?: MapStore;
     x: number;
     y: number;
     style: React.CSSProperties;
 }
 
-@inject("gameState", "renderOptions")
+@inject("gameState", "renderOptions", "map")
 @observer
 export default class MapChunk extends React.Component<MapChunkProperties, never> {
 
@@ -30,6 +32,7 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
 
     canvas: HTMLCanvasElement;
     canvasContext: CanvasRenderingContext2D;
+    renderCount: number = 0;
 
     renderReactionDisposer: () => void;
 
@@ -53,39 +56,66 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
     }
 
     renderToCanvas() {
-        const label = `Chunk - ${this.props.x}-${this.props.y}`;
+        this.renderCount++;
 
+        const label = `Chunk - ${this.props.x}-${this.props.y}`;
+        const highlightChunks = this.props.renderOptions.highlightChunks;
+        const map = this.props.map;
         const ctx = this.canvasContext;
 
-        const tileImage = this.props.gameState.tiles.grass.image;
-
         ctx.fillStyle = "white";
-        // ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // ctx.fillRect(0, 0, 10, 10); // this.canvas.width, this.canvas.height);
 
         for (let x = 0; x < horizontalTiles; x++) {
             for (let y = 0; y < verticalTiles; y++) {
-                const xPosition = x * tileSize.width;
-                const yPosition = y * tileSize.height;
+                const xPosition = x * tileSize.width + 0.5;
+                const yPosition = y * tileSize.height + 0.5;
+
+                const mapX = x + this.props.x * horizontalTiles;
+                const mapY = y + this.props.y * verticalTiles;
+
+                const tileImage = map.ground[mapY][mapX].image;
+
+                // const tileImage = this.props.gameState.tiles[(x + y) % 23 ? 'grass' : 'wall/tall'].image;
 
                 ctx.drawImage(tileImage, xPosition, yPosition, 50.5, 85.5);
             }
         }
 
-        if (this.props.renderOptions.highlightChunks) {
+        if (highlightChunks) {
             ctx.save();
-            ctx.translate(0, 25);
+            ctx.translate(0, topPadding);
+
+            ctx.rect(0, 0, MapChunk.width, MapChunk.height);
+            ctx.clip();
+
+            ctx.shadowColor = "black";
+            ctx.shadowOffsetX = 3;
+            ctx.shadowOffsetY = 3;
+            ctx.shadowBlur = 5;
 
             ctx.font = '16px sans-serif';
-            ctx.fillText(`Chunk - ${this.props.x}-${this.props.y}`, 10, 25);
+            ctx.fillStyle = 'white';
+            ctx.fillText(`Chunk - ${this.props.x}-${this.props.y}`, 10.5, 25.5);
 
-            ctx.strokeRect(0, 0, MapChunk.width, MapChunk.height);
+            ctx.font = '14px sans-serif';
+            ctx.fillText(`${this.renderCount} renders.`, 10.5, 44.5);
+
+            ctx.shadowColor = "purple";
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            ctx.shadowBlur = 4;
+            ctx.strokeStyle = "purple";
+            ctx.lineWidth = 2;
+
+            ctx.strokeRect(0.5, 0.5, MapChunk.width - 0.5, MapChunk.height - 0.5);
 
             ctx.restore();
         }
     }
 
     render() {
-        const { style, gameState: { mapData }, x, y } = this.props;
+        const { style, x, y } = this.props;
 
         const canvasStyle = {
             marginTop: `-${topPadding}px`

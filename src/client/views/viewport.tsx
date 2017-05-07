@@ -44,9 +44,6 @@ export default class ViewPort extends React.Component<{ gameState?: GameState },
     }
 
     render() {
-        // let { width, height } = this.props.gameState.mapData.imageData;
-        // console.log({ width, height });
-
         return <div className={styles.viewport}>
             <AutoSizer>
                 {({width, height}) => {
