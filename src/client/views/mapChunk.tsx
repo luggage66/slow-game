@@ -73,7 +73,7 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
         const map = this.props.map;
         const ctx = this.canvasContext;
 
-        ctx.setTransform(1, 0, 0, 1, 0.5, 0.5);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height + topPadding); // this.canvas.width, this.canvas.height);
 
@@ -89,7 +89,7 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
 
                 // const tileImage = this.props.gameState.tiles[(x + y) % 23 ? 'grass' : 'wall/tall'].image;
 
-                ctx.drawImage(tileImage, xPosition, yPosition, 50, 85);
+                ctx.drawImage(tileImage, 0, 0, 100, 170, xPosition, yPosition, 50, 85);
             }
         }
 

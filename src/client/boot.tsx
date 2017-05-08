@@ -19,7 +19,7 @@ document.body.appendChild(reactContainer);
 
 // mounty mounty
 const gameState = (window as any).game = new GameState();
-// ReactDom.render(<Provider gameState={gameState} renderOptions={renderOptions}><GameView /></Provider>, reactContainer);
+gameState.initilize();
 
 // tslint:disable-next-line:variable-name
 function render(Component) {

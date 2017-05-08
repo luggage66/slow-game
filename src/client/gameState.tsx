@@ -28,8 +28,14 @@ export default class GameState {
             renderOptions,
             assets
         };
+    }
 
-        this.loadAssets();
+    @action
+    async initilize() {
+        await this.loadAssets();
+
+        console.log('2');
+        // this.gameloop();
     }
 
     @action
@@ -42,4 +48,10 @@ export default class GameState {
         });
     }
 
+    @action
+    gameloop = () => {
+        console.log('loopy');
+
+        window.requestAnimationFrame(this.gameloop);
+    }
 }

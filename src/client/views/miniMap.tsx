@@ -44,7 +44,7 @@ export default class MiniMapView extends React.Component<MiniMapViewProps, never
         const ctx = this.canvasContext;
         const map = this.props.map;
 
-        ctx.setTransform(1, 0, 0, 1, 0.5, 0.5);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         const rowsCount = map.ground.length;
         const columnsCount = map.ground[0].length;
