@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
-import GameState from '../gameState'; // for type only
-import { RenderOptions } from '../stores/renderOptions'; // for type
+import Game from '../game'; // for type only
 import { MapStore } from '../stores/map'; // for type
 import { AssetsStore } from '../stores/assets'; // for type
 
@@ -19,13 +18,10 @@ const verticalTiles = 16;
 const topPadding = 25;
 
 interface EntityProps {
-    gameState?: GameState;
-    renderOptions?: RenderOptions;
-    map?: MapStore;
-    assets?: AssetsStore;
+    game?: Game;
 }
 
-@inject("gameState", "renderOptions", "map", "assets")
+@inject("game")
 @observer
 export default class Entity extends React.Component<EntityProps, never> {
 
@@ -60,12 +56,12 @@ export default class Entity extends React.Component<EntityProps, never> {
     renderToCanvas() {
         this.renderCount++;
         const label = `Entity #1`;
-        const highlightEntities = this.props.renderOptions.highlightEntities;
+        const highlightEntities = this.props.game.displayOptions.highlightEntities;
         const ctx = this.canvasContext;
 
         ctx.setTransform(1, 0, 0, 1, 0.5, 0.5);
 
-        const tileImage = this.props.assets.playerImage;
+        const tileImage = this.props.game.assets.playerImage;
         ctx.drawImage(tileImage, 0, 0, Entity.width, Entity.height);
 
 

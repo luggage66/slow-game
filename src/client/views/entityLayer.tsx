@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
-import GameState from '../gameState'; // for type only
-import { RenderOptions } from '../stores/renderOptions'; // for type
+import Game from '../game'; // for type only
 import { MapStore } from '../stores/map'; // for type
 import Entity from './entity';
 
@@ -19,12 +18,10 @@ const verticalTiles = 16;
 const topPadding = 25;
 
 interface EntityLayerProps {
-    gameState?: GameState;
-    renderOptions?: RenderOptions;
-    map?: MapStore;
+    game?: Game;
 }
 
-@inject("gameState", "renderOptions", "map")
+@inject("game")
 @observer
 export default class EntityLayer extends React.Component<EntityLayerProps, never> {
 

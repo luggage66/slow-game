@@ -2,36 +2,26 @@ import * as React from 'react';
 import { observable, action, runInAction, computed } from 'mobx';
 import { MapStore } from './stores/map';
 import { AssetsStore } from './stores/assets';
-import { RenderOptions } from './stores/renderOptions';
+import { DisplayOptions } from './stores/displayOptions';
 
 import mapUrl from './map.png';
 
-export default class GameState {
+export default class Game {
     @observable isReady = false;
     @observable mapUrl = mapUrl;
 
-    stores: {
-        gameState: GameState;
-        map: MapStore;
-        renderOptions: RenderOptions;
-        assets: AssetsStore;
-    };
+    map: MapStore;
+    displayOptions: DisplayOptions;
+    assets: AssetsStore;
 
     constructor() {
-        const assets = new AssetsStore();
-        const map = new MapStore(assets);
-
-        const renderOptions = new RenderOptions();
-        this.stores = {
-            gameState: this,
-            map,
-            renderOptions,
-            assets
-        };
+        this.assets = new AssetsStore();
+        this.map = new MapStore(this.assets);
+        this.displayOptions = new DisplayOptions();
     }
 
     @action
-    async initilize() {
+    async initialize() {
         await this.loadAssets();
 
         console.log('2');
@@ -40,8 +30,8 @@ export default class GameState {
 
     @action
     async loadAssets() {
-        await this.stores.assets.load();
-        this.stores.map.generate('33223323');
+        await this.assets.load();
+        this.map.generate('33223323');
 
         runInAction(() => {
             this.isReady = true;

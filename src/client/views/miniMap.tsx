@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { autorun } from 'mobx';
 import { observer, inject } from 'mobx-react';
-import GameState from '../gameState'; // for type only
+import Game from '../game'; // for type only
 import { MapStore } from '../stores/map'; // for type only
 
 import styles from '../styles/index.scss';
 
 interface MiniMapViewProps {
-    gameState?: GameState;
-    map?: MapStore;
+    game?: Game;
 }
 
-@inject("gameState", "map")
+@inject("game")
 @observer
 export default class MiniMapView extends React.Component<MiniMapViewProps, never> {
     canvas: HTMLCanvasElement;
@@ -42,7 +41,7 @@ export default class MiniMapView extends React.Component<MiniMapViewProps, never
     renderToCanvas() {
         this.renderCount++;
         const ctx = this.canvasContext;
-        const map = this.props.map;
+        const map = this.props.game.map;
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 

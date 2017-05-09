@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { observer, inject } from 'mobx-react';
-import GameState from '../gameState'; // for type only
-import { RenderOptions } from '../stores/renderOptions'; // for type
+import Game from '../game'; // for type only
 
 import styles from '../styles/index.scss';
 
 interface GameDevToolsProperties {
-    gameState?: GameState;
-    renderOptions?: RenderOptions;
+    game?: Game;
 }
 
-@inject("gameState", "renderOptions")
+@inject("game")
 @observer
 export default class GameDevTools extends React.Component<GameDevToolsProperties, never> {
 
@@ -19,8 +17,8 @@ export default class GameDevTools extends React.Component<GameDevToolsProperties
             <label>
                 <input
                     type="checkbox"
-                    checked={this.props.renderOptions.highlightChunks}
-                    onChange={(e) => this.props.renderOptions.highlightChunks = e.target.checked}
+                    checked={this.props.game.displayOptions.highlightChunks}
+                    onChange={(e) => this.props.game.displayOptions.highlightChunks = e.target.checked}
                 /> Show Chunks
             </label>
         </div>;

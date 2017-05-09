@@ -2,7 +2,7 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import GameView from './views/game';
-import GameState from './gameState';
+import Game from './game';
 import { useStrict } from 'mobx';
 import { Provider } from 'mobx-react';
 import styles from './styles/index.scss';
@@ -18,12 +18,12 @@ reactContainer.classList.add(styles.gameContainer);
 document.body.appendChild(reactContainer);
 
 // mounty mounty
-const gameState = (window as any).game = new GameState();
-gameState.initilize();
+const game = (window as any).game = new Game();
+game.initialize();
 
 // tslint:disable-next-line:variable-name
 function render(Component) {
-    ReactDom.render(<Provider {...gameState.stores}><Component /></Provider>, reactContainer);
+    ReactDom.render(<Provider game={game}><Component /></Provider>, reactContainer);
 }
 
 render(GameView);

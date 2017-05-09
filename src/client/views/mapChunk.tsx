@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { autorun, action, computed } from 'mobx';
 import { observer, inject } from 'mobx-react';
-import GameState from '../gameState'; // for type only
-import { RenderOptions } from '../stores/renderOptions'; // for type
+import Game from '../game'; // for type only
 import { MapStore } from '../stores/map'; // for type
 
 import styles from '../styles/index.scss';
@@ -18,15 +17,13 @@ const verticalTiles = 16;
 const topPadding = 25;
 
 interface MapChunkProperties {
-    gameState?: GameState;
-    renderOptions?: RenderOptions;
-    map?: MapStore;
+    game?: Game;
     x: number;
     y: number;
     style: React.CSSProperties;
 }
 
-@inject("gameState", "renderOptions", "map")
+@inject("game")
 export default class MapChunk extends React.Component<MapChunkProperties, never> {
 
     static width = tileSize.width * horizontalTiles;
@@ -69,8 +66,8 @@ export default class MapChunk extends React.Component<MapChunkProperties, never>
         this.renderCount++;
 
         const label = `Chunk - ${this.props.x}-${this.props.y}`;
-        const highlightChunks = this.props.renderOptions.highlightChunks;
-        const map = this.props.map;
+        const highlightChunks = this.props.game.displayOptions.highlightChunks;
+        const map = this.props.game.map;
         const ctx = this.canvasContext;
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);

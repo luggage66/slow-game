@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { computed, action } from 'mobx';
 import { observer, inject } from 'mobx-react';
-import GameState from '../gameState'; // for type only
+import Game from '../game'; // for type only
 import { AutoSizer, Grid, GridCellRenderer, GridCellProps } from 'react-virtualized';
 
 import MapChunk from './mapChunk';
@@ -10,9 +10,9 @@ import EntityLayer from './entityLayer';
 import styles from '../styles/index.scss';
 
 
-@inject("gameState")
+@inject("game")
 @observer
-export default class ViewPort extends React.Component<{ gameState?: GameState }, never> {
+export default class ViewPort extends React.Component<{ game?: Game }, never> {
 
     cellRenderer = (props: GridCellProps) => {
         return <MapChunk key={`${props.rowIndex}-${props.columnIndex}`} x={props.columnIndex} y={props.rowIndex} style={props.style} />;
